@@ -23,8 +23,10 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.tracecompass.analysis.os.linux.core.kernelanalysis.Attributes;
 import org.eclipse.tracecompass.analysis.os.linux.core.kernelanalysis.KernelAnalysisModule;
+import org.eclipse.tracecompass.analysis.os.linux.core.signals.TmfCpuSelectedSignal;
 import org.eclipse.tracecompass.analysis.os.linux.ui.views.resources.ResourcesEntry.Type;
 import org.eclipse.tracecompass.internal.analysis.os.linux.ui.Messages;
 import org.eclipse.tracecompass.statesystem.core.ITmfStateSystem;
@@ -81,6 +83,17 @@ public class ResourcesView extends AbstractStateSystemTimeGraphView {
 
     }
 
+    @Override
+    public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
+        getTimeGraphViewer().addSelectionListener(event -> {
+            ResourcesEntry entry = (ResourcesEntry) event.getSelection();
+            if (entry.getType().equals(ResourcesEntry.Type.CPU)) {
+                broadcast(new TmfCpuSelectedSignal(event.getSource(), entry.getId()));
+            }
+        });
+    }
+
     // ------------------------------------------------------------------------
     // Internal
     // ------------------------------------------------------------------------
@@ -134,7 +147,8 @@ public class ResourcesView extends AbstractStateSystemTimeGraphView {
                 return;
             }
             long end = ssq.getCurrentEndTime();
-            if (start == end && !complete) { // when complete execute one last time regardless of end time
+            if (start == end && !complete) { // when complete execute one last
+                                             // time regardless of end time
                 continue;
             }
             long endTime = end + 1;
@@ -230,8 +244,8 @@ public class ResourcesView extends AbstractStateSystemTimeGraphView {
                 statusQuark = ssq.getQuarkRelative(quark, Attributes.STATUS);
             } catch (AttributeNotFoundException e) {
                 /*
-                 * The sub-attribute "status" is not available. May happen
-                 * if the trace does not have sched_switch events enabled.
+                 * The sub-attribute "status" is not available. May happen if
+                 * the trace does not have sched_switch events enabled.
                  */
                 return null;
             }
@@ -291,7 +305,11 @@ public class ResourcesView extends AbstractStateSystemTimeGraphView {
                     lastIsNull = false;
                 } else {
                     if (lastEndTime != time && lastIsNull) {
-                        /* This is a special case where we want to show IRQ_ACTIVE state but we don't know the CPU (it is between two null samples) */
+                        /*
+                         * This is a special case where we want to show
+                         * IRQ_ACTIVE state but we don't know the CPU (it is
+                         * between two null samples)
+                         */
                         eventList.add(new TimeEvent(entry, lastEndTime, time - lastEndTime, -1));
                     }
                     eventList.add(new NullTimeEvent(entry, time, duration));
