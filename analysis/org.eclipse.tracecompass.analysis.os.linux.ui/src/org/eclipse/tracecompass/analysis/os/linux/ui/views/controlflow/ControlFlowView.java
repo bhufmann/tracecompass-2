@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.tracecompass.analysis.os.linux.core.kernelanalysis.Attributes;
 import org.eclipse.tracecompass.analysis.os.linux.core.kernelanalysis.KernelAnalysisModule;
+import org.eclipse.tracecompass.analysis.os.linux.core.signals.TmfThreadSelectedSignal;
 import org.eclipse.tracecompass.internal.analysis.os.linux.ui.Activator;
 import org.eclipse.tracecompass.internal.analysis.os.linux.ui.Messages;
 import org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.controlflow.ControlFlowColumnComparators;
@@ -132,6 +133,10 @@ public class ControlFlowView extends AbstractStateSystemTimeGraphView {
         // add "Uncheck inactive" Button to TimeGraphFilterDialog
         super.getTimeGraphCombo().addTimeGraphFilterUncheckInactiveButton(
                 new ControlFlowCheckActiveProvider(Messages.ControlFlowView_uncheckInactiveLabel, Messages.ControlFlowView_uncheckInactiveToolTip));
+        super.getTimeGraphCombo().addSelectionListener(event -> {
+            ControlFlowEntry entry = (ControlFlowEntry)event.getSelection();
+            broadcast(new TmfThreadSelectedSignal(event.getSource(), entry.getThreadId(), entry.getTrace()));
+        });
     }
 
     @Override
