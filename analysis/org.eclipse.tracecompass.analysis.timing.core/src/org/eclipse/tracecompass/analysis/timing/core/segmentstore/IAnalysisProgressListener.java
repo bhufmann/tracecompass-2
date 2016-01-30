@@ -28,6 +28,6 @@ public interface IAnalysisProgressListener {
      * @param data
      *            segment store of the latency analysis
      */
-    void onComplete(AbstractSegmentStoreAnalysisModule activeAnalysis, ISegmentStore<ISegment> data);
+    void onComplete(ISegmentStoreProvider activeAnalysis, ISegmentStore<ISegment> data);
 
 }

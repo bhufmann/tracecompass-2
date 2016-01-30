@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.AbstractSegmentStoreAnalysisModule;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.IAnalysisProgressListener;
+import org.eclipse.tracecompass.analysis.timing.core.segmentstore.ISegmentStoreProvider;
 import org.eclipse.tracecompass.analysis.timing.ui.views.segmentstore.SubSecondTimeWithUnitFormat;
 import org.eclipse.tracecompass.common.core.NonNullUtils;
 import org.eclipse.tracecompass.internal.analysis.timing.ui.views.segmentstore.density.MouseDragZoomProvider;
@@ -206,7 +207,7 @@ public abstract class AbstractSegmentStoreDensityViewer extends TmfViewer {
     }
 
     private @Nullable List<ISegment> computeData(final TmfTimeRange timeRange, final Range durationRange) {
-        final AbstractSegmentStoreAnalysisModule analysisModule = fAnalysisModule;
+        final ISegmentStoreProvider analysisModule = fAnalysisModule;
         if (analysisModule == null) {
             return null;
         }

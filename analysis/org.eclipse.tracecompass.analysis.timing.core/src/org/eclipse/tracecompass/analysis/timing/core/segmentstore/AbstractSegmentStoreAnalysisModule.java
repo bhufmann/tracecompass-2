@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableList;
  * @since 2.0
  *
  */
-public abstract class AbstractSegmentStoreAnalysisModule extends TmfAbstractAnalysisModule {
+public abstract class AbstractSegmentStoreAnalysisModule extends TmfAbstractAnalysisModule implements ISegmentStoreProvider {
 
     private final ListenerList fListeners = new ListenerList(ListenerList.IDENTITY);
 
@@ -54,22 +54,12 @@ public abstract class AbstractSegmentStoreAnalysisModule extends TmfAbstractAnal
 
     private @Nullable ITmfEventRequest fOngoingRequest = null;
 
-    /**
-     * Listener for the viewers
-     *
-     * @param listener
-     *            listener for each type of viewer
-     */
+    @Override
     public void addListener(IAnalysisProgressListener listener) {
         fListeners.add(listener);
     }
 
-    /**
-     * Removes a listener for the viewers
-     *
-     * @param listener
-     *            listener for each type of viewer to remove
-     */
+    @Override
     public void removeListener(IAnalysisProgressListener listener) {
         fListeners.remove(listener);
     }
@@ -89,13 +79,10 @@ public abstract class AbstractSegmentStoreAnalysisModule extends TmfAbstractAnal
         return listeners;
     }
 
-    /**
-     * Return the pre-defined set of segment aspects exposed by this analysis.
-     *
-     * It should not be null, but could be empty.
-     *
-     * @return The segment aspects for this analysis
+    /* (non-Javadoc)
+     * @see org.eclipse.tracecompass.analysis.timing.core.segmentstore.ISegmentStoreProvider#getSegmentAspects()
      */
+    @Override
     public Iterable<ISegmentAspect> getSegmentAspects() {
         Collection<ISegmentAspect> coll = ImmutableList.of();
         return checkNotNull(coll);
@@ -130,11 +117,7 @@ public abstract class AbstractSegmentStoreAnalysisModule extends TmfAbstractAnal
      */
     protected abstract Object[] readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException;
 
-    /**
-     * Returns the result in a from the analysis in a ISegmentStore
-     *
-     * @return Results from the analysis in a ISegmentStore
-     */
+    @Override
     public @Nullable ISegmentStore<ISegment> getResults() {
         return fSegmentStore;
     }

@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.AbstractSegmentStoreAnalysisModule;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.IAnalysisProgressListener;
+import org.eclipse.tracecompass.analysis.timing.core.segmentstore.ISegmentStoreProvider;
 import org.eclipse.tracecompass.analysis.timing.ui.views.segmentstore.SubSecondTimeWithUnitFormat;
 import org.eclipse.tracecompass.common.core.NonNullUtils;
 import org.eclipse.tracecompass.internal.analysis.timing.ui.Activator;
@@ -89,7 +90,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
                 return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Monitor is null"); //$NON-NLS-1$
             }
 
-            AbstractSegmentStoreAnalysisModule module = getAnalysisModule();
+            ISegmentStoreProvider module = getAnalysisModule();
             final long startTimeInNanos = getTimeInNanos(fCurrentRange.getStartTime());
             final long endTimeInNanos = getTimeInNanos(fCurrentRange.getEndTime());
             if (module == null) {
@@ -198,7 +199,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
     private final class AnalysisProgressListener implements IAnalysisProgressListener {
 
         @Override
-        public void onComplete(AbstractSegmentStoreAnalysisModule activeAnalysis, ISegmentStore<ISegment> results) {
+        public void onComplete(ISegmentStoreProvider activeAnalysis, ISegmentStore<ISegment> results) {
             // Only update the model if trace that was analyzed is active trace
             if (activeAnalysis.equals(getAnalysisModule())) {
                 updateModel(results);
