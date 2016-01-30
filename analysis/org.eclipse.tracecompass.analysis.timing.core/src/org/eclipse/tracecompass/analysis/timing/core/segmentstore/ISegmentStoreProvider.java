@@ -1,5 +1,6 @@
 package org.eclipse.tracecompass.analysis.timing.core.segmentstore;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
 import org.eclipse.tracecompass.segmentstore.core.ISegmentStore;
@@ -44,6 +45,6 @@ public interface ISegmentStoreProvider {
      * @return Results from the analysis in a ISegmentStore
      */
     @Nullable
-    ISegmentStore<ISegment> getResults();
+    ISegmentStore<@NonNull ISegment> getResults();
 
 }

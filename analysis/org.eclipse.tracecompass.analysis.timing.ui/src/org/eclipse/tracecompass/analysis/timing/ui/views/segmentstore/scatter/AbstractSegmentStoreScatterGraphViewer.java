@@ -28,7 +28,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.tracecompass.analysis.timing.core.segmentstore.AbstractSegmentStoreAnalysisModule;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.IAnalysisProgressListener;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.ISegmentStoreProvider;
 import org.eclipse.tracecompass.analysis.timing.ui.views.segmentstore.SubSecondTimeWithUnitFormat;
@@ -256,7 +255,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
 
     private final void initializeModule(@Nullable ITmfTrace trace) {
         if (trace != null) {
-            final AbstractSegmentStoreAnalysisModule analysisModuleOfClass = getSegmentStoreAnalysisModule(trace);
+            final ISegmentStoreProvider analysisModuleOfClass = getSegmentStoreAnalysisModule(trace);
             if (analysisModuleOfClass != null) {
                 analysisModuleOfClass.addListener(fListener);
                 setData(analysisModuleOfClass);
@@ -422,7 +421,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
      *            The trace to consider
      * @return the analysis module
      */
-    protected @Nullable abstract AbstractSegmentStoreAnalysisModule getSegmentStoreAnalysisModule(ITmfTrace trace);
+    protected abstract @Nullable ISegmentStoreProvider getSegmentStoreAnalysisModule(ITmfTrace trace);
 
     // ------------------------------------------------------------------------
     // Signal handlers
@@ -466,7 +465,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
         setTrace(trace);
         if (trace != null) {
 
-            final AbstractSegmentStoreAnalysisModule analysisModuleOfClass = getSegmentStoreAnalysisModule(trace);
+            final ISegmentStoreProvider analysisModuleOfClass = getSegmentStoreAnalysisModule(trace);
             final TmfTimeRange timeRange = TmfTraceManager.getInstance().getCurrentTraceContext().getWindowRange();
             setWindowRange(
                     getTimeInNanos(timeRange.getStartTime()),

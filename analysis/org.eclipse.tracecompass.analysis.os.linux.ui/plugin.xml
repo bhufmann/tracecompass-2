@@ -65,6 +65,41 @@
             name="%latency.density.view.name"
             restorable="true">
       </view>
+        <view
+            allowMultiple="false"
+            category="org.eclipse.linuxtools.lttng2.ui.views.category"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitTableView"
+            icon="icons/eview16/latency.png"
+            id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.table"
+            name="Thread wait table"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.linuxtools.lttng2.ui.views.category"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitScatterGraphView"
+            icon="icons/eview16/scatter.png"
+            id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.scatter"
+            name="Thread wait graph"
+            restorable="true">
+       </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.linuxtools.lttng2.ui.views.category"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitStatisticsView"
+            icon="icons/eview16/statistics_view.gif"
+            id="org.eclipse.tracecompass.analysis.os.linux.ui.views.threadwait.statsview"
+            name="Thread wait statistics"
+            restorable="true">
+      </view>
+      <view
+            category="org.eclipse.linuxtools.lttng2.ui.views.category"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitDensityView"
+            icon="icons/eview16/density.png"
+            id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.density"
+            name="Thread wait density"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.linuxtools.tmf.core.analysis">
@@ -115,6 +150,33 @@
             id="org.eclipse.tracecompass.analysis.os.linux.views.latency.density">
          <analysisModuleClass
                class="org.eclipse.tracecompass.analysis.os.linux.core.latency.SystemCallLatencyAnalysis">
+         </analysisModuleClass>
+      </output>      <output
+            class="org.eclipse.tracecompass.tmf.ui.analysis.TmfAnalysisViewOutput"
+            id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.table">
+         <analysisModuleClass
+               class="org.eclipse.tracecompass.internal.analysis.os.linux.core.threadwaits.ThreadWaitAnalysis">
+         </analysisModuleClass>
+      </output>
+      <output
+            class="org.eclipse.tracecompass.tmf.ui.analysis.TmfAnalysisViewOutput"
+            id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.scatter">
+         <analysisModuleClass
+               class="org.eclipse.tracecompass.internal.analysis.os.linux.core.threadwaits.ThreadWaitAnalysis">
+         </analysisModuleClass>
+      </output>
+      <output
+            class="org.eclipse.tracecompass.tmf.ui.analysis.TmfAnalysisViewOutput"
+            id="org.eclipse.tracecompass.analysis.os.linux.ui.views.threadwait.statsview">
+         <analysisModuleClass
+               class="org.eclipse.tracecompass.internal.analysis.os.linux.core.threadwaits.ThreadWaitAnalysis">
+         </analysisModuleClass>
+      </output>
+      <output
+            class="org.eclipse.tracecompass.tmf.ui.analysis.TmfAnalysisViewOutput"
+            id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.density">
+         <analysisModuleClass
+               class="org.eclipse.tracecompass.internal.analysis.os.linux.core.threadwaits.ThreadWaitAnalysis">
          </analysisModuleClass>
       </output>
    </extension>

@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.tracecompass.analysis.timing.core.segmentstore.AbstractSegmentStoreAnalysisModule;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.IAnalysisProgressListener;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.ISegmentStoreProvider;
 import org.eclipse.tracecompass.analysis.timing.ui.views.segmentstore.SubSecondTimeWithUnitFormat;
@@ -114,7 +113,7 @@ public abstract class AbstractSegmentStoreDensityViewer extends TmfViewer {
      *            The trace to consider
      * @return the analysis module
      */
-    protected @Nullable abstract AbstractSegmentStoreAnalysisModule getSegmentStoreAnalysisModule(ITmfTrace trace);
+    protected abstract @Nullable ISegmentStoreProvider getSegmentStoreAnalysisModule(ITmfTrace trace);
 
     @Nullable
     private static ITmfTrace getTrace() {
