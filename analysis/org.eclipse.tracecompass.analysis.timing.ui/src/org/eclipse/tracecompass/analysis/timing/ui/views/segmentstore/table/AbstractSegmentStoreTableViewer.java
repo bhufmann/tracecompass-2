@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.tracecompass.analysis.timing.core.segmentstore.AbstractSegmentStoreAnalysisModule;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.IAnalysisProgressListener;
 import org.eclipse.tracecompass.analysis.timing.core.segmentstore.ISegmentStoreProvider;
 import org.eclipse.tracecompass.common.core.NonNullUtils;
@@ -37,6 +36,7 @@ import org.eclipse.tracecompass.internal.analysis.timing.ui.views.segmentstore.t
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
 import org.eclipse.tracecompass.segmentstore.core.ISegmentStore;
 import org.eclipse.tracecompass.segmentstore.core.SegmentComparators;
+import org.eclipse.tracecompass.tmf.core.analysis.TmfAbstractAnalysisModule;
 import org.eclipse.tracecompass.tmf.core.segment.ISegmentAspect;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSelectionRangeUpdatedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalHandler;
@@ -113,7 +113,7 @@ public abstract class AbstractSegmentStoreTableViewer extends TmfSimpleTableView
     /**
      * Current segment store analysis module
      */
-    private @Nullable AbstractSegmentStoreAnalysisModule fAnalysisModule = null;
+    private @Nullable ISegmentStoreProvider fAnalysisModule = null;
 
     /**
      * Analysis progress listener
@@ -237,7 +237,7 @@ public abstract class AbstractSegmentStoreTableViewer extends TmfSimpleTableView
      * @param analysis
      *            segment store analysis module
      */
-    public void setData(@Nullable AbstractSegmentStoreAnalysisModule analysis) {
+    public void setData(@Nullable ISegmentStoreProvider analysis) {
         // Set the current segment store analysis module
         fAnalysisModule = analysis;
         if (analysis == null) {
@@ -257,7 +257,10 @@ public abstract class AbstractSegmentStoreTableViewer extends TmfSimpleTableView
         // If results are null, then add completion listener and run analysis
         updateModel(null);
         analysis.addListener(fListener);
-        analysis.schedule();
+        if(analysis instanceof TmfAbstractAnalysisModule) {
+            TmfAbstractAnalysisModule analysisModule = (TmfAbstractAnalysisModule) analysis;
+            analysisModule.schedule();
+        }
     }
 
     /**
@@ -266,7 +269,7 @@ public abstract class AbstractSegmentStoreTableViewer extends TmfSimpleTableView
      *            The trace to consider
      * @return the segment store analysis module
      */
-    protected @Nullable abstract AbstractSegmentStoreAnalysisModule getSegmentStoreAnalysisModule(ITmfTrace trace);
+    protected @Nullable abstract ISegmentStoreProvider getSegmentStoreAnalysisModule(ITmfTrace trace);
 
     @Override
     protected void appendToTablePopupMenu(IMenuManager manager, IStructuredSelection sel) {
@@ -300,7 +303,7 @@ public abstract class AbstractSegmentStoreTableViewer extends TmfSimpleTableView
      *
      * @return current segment store analysis module
      */
-    public @Nullable AbstractSegmentStoreAnalysisModule getAnalysisModule() {
+    public @Nullable ISegmentStoreProvider getAnalysisModule() {
         return fAnalysisModule;
     }
 
@@ -354,7 +357,7 @@ public abstract class AbstractSegmentStoreTableViewer extends TmfSimpleTableView
                 refresh();
             }
 
-            AbstractSegmentStoreAnalysisModule analysis = getAnalysisModule();
+            ISegmentStoreProvider analysis = getAnalysisModule();
             if ((analysis != null)) {
                 analysis.removeListener(fListener);
             }

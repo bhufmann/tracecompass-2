@@ -218,7 +218,14 @@ public class TreeMapStore<@NonNull E extends ISegment> implements ISegmentStore<
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        fLock.writeLock().lock();
+        try{
+            fEndTimesIndex.clear();
+            fStartTimesIndex.clear();
+            fSize=0;
+        }finally{
+            fLock.writeLock().unlock();
+        }
     }
 
     // ------------------------------------------------------------------------

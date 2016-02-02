@@ -68,7 +68,7 @@
         <view
             allowMultiple="false"
             category="org.eclipse.linuxtools.lttng2.ui.views.category"
-            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitTableView"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwaits.ThreadWaitTableView"
             icon="icons/eview16/latency.png"
             id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.table"
             name="Thread wait table"
@@ -77,7 +77,7 @@
       <view
             allowMultiple="false"
             category="org.eclipse.linuxtools.lttng2.ui.views.category"
-            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitScatterGraphView"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwaits.ThreadWaitScatterGraphView"
             icon="icons/eview16/scatter.png"
             id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.scatter"
             name="Thread wait graph"
@@ -86,7 +86,7 @@
       <view
             allowMultiple="false"
             category="org.eclipse.linuxtools.lttng2.ui.views.category"
-            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitStatisticsView"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwaits.ThreadWaitStatisticsView"
             icon="icons/eview16/statistics_view.gif"
             id="org.eclipse.tracecompass.analysis.os.linux.ui.views.threadwait.statsview"
             name="Thread wait statistics"
@@ -94,7 +94,7 @@
       </view>
       <view
             category="org.eclipse.linuxtools.lttng2.ui.views.category"
-            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwait.ThreadWaitDensityView"
+            class="org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.threadwaits.ThreadWaitDensityView"
             icon="icons/eview16/density.png"
             id="org.eclipse.tracecompass.analysis.os.linux.views.threadwait.density"
             name="Thread wait density"

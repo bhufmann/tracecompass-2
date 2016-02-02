@@ -38,6 +38,7 @@ import org.eclipse.tracecompass.internal.analysis.timing.ui.views.segmentstore.s
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
 import org.eclipse.tracecompass.segmentstore.core.ISegmentStore;
 import org.eclipse.tracecompass.segmentstore.core.SegmentComparators;
+import org.eclipse.tracecompass.tmf.core.analysis.TmfAbstractAnalysisModule;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalHandler;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalManager;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceClosedSignal;
@@ -223,7 +224,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
     /**
      * Current analysis module
      */
-    private @Nullable AbstractSegmentStoreAnalysisModule fAnalysisModule;
+    private @Nullable ISegmentStoreProvider fAnalysisModule;
 
     private @Nullable Job fCompactingJob;
 
@@ -395,7 +396,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
      * @param analysis
      *            Segment store analysis module
      */
-    public void setData(@Nullable AbstractSegmentStoreAnalysisModule analysis) {
+    public void setData(@Nullable ISegmentStoreProvider analysis) {
         if (analysis == null) {
             updateModel(null);
             return;
@@ -410,7 +411,10 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
         }
         updateModel(null);
         analysis.addListener(fListener);
-        analysis.schedule();
+        if(analysis instanceof TmfAbstractAnalysisModule) {
+            TmfAbstractAnalysisModule analysisModule = (TmfAbstractAnalysisModule) analysis;
+            analysisModule.schedule();
+        }
         setAnalysisModule(analysis);
     }
 
@@ -496,7 +500,7 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
         if (signal != null) {
             // Check if there is no more opened trace
             if (TmfTraceManager.getInstance().getActiveTrace() == null) {
-                AbstractSegmentStoreAnalysisModule analysis = getAnalysisModule();
+                ISegmentStoreProvider analysis = getAnalysisModule();
                 if (analysis != null) {
                     analysis.removeListener(fListener);
                 }
@@ -525,11 +529,11 @@ public abstract class AbstractSegmentStoreScatterGraphViewer extends TmfCommonXL
         }
     }
 
-    private @Nullable AbstractSegmentStoreAnalysisModule getAnalysisModule() {
+    private @Nullable ISegmentStoreProvider getAnalysisModule() {
         return fAnalysisModule;
     }
 
-    private void setAnalysisModule(AbstractSegmentStoreAnalysisModule analysisModule) {
+    private void setAnalysisModule(ISegmentStoreProvider analysisModule) {
         fAnalysisModule = analysisModule;
     }
 

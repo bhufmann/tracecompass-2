@@ -35,6 +35,7 @@ import org.eclipse.tracecompass.internal.analysis.timing.ui.views.segmentstore.d
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
 import org.eclipse.tracecompass.segmentstore.core.ISegmentStore;
 import org.eclipse.tracecompass.segmentstore.core.SegmentComparators;
+import org.eclipse.tracecompass.tmf.core.analysis.TmfAbstractAnalysisModule;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalHandler;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceClosedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceOpenedSignal;
@@ -77,7 +78,7 @@ public abstract class AbstractSegmentStoreDensityViewer extends TmfViewer {
 
     private @Nullable ITmfTrace fTrace;
     private @Nullable IAnalysisProgressListener fListener;
-    private @Nullable AbstractSegmentStoreAnalysisModule fAnalysisModule;
+    private @Nullable ISegmentStoreProvider fAnalysisModule;
     private TmfTimeRange fCurrentTimeRange = TmfTimeRange.NULL_RANGE;
     private List<ISegmentStoreDensityViewerDataListener> fListeners;
 
@@ -339,11 +340,14 @@ public abstract class AbstractSegmentStoreDensityViewer extends TmfViewer {
 
         if (trace != null) {
             fAnalysisModule = getSegmentStoreAnalysisModule(trace);
-            final AbstractSegmentStoreAnalysisModule module = fAnalysisModule;
+            final ISegmentStoreProvider module = fAnalysisModule;
             if (module != null) {
                 fListener = (activeAnalysis, data) -> updateWithRange(windowRange);
                 module.addListener(fListener);
-                module.schedule();
+                if(module instanceof TmfAbstractAnalysisModule) {
+                    TmfAbstractAnalysisModule analysisModule = (TmfAbstractAnalysisModule) module;
+                    analysisModule.schedule();
+                }
             }
         }
         zoom(new Range(0, Long.MAX_VALUE));
