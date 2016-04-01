@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.tracecompass.internal.lttng2.ust.core.trace.layout.LttngUst20EventLayout;
+import org.eclipse.tracecompass.lttng2.ust.core.trace.LttngUstEvent;
 import org.eclipse.tracecompass.lttng2.ust.core.trace.LttngUstTrace;
 import org.eclipse.tracecompass.lttng2.ust.core.trace.layout.ILttngUstEventLayout;
 import org.eclipse.tracecompass.tmf.core.callstack.CallStackStateProvider;
@@ -47,6 +48,9 @@ public class LttngUstCallStackProvider extends CallStackStateProvider {
      * the contents of the generated state history in some way.
      */
     private static final int VERSION = 2;
+
+    /** name of a thread that has no procname */
+    private static final String UNKNOWN = "unknown procname"; //$NON-NLS-1$
 
     /** Event names indicating function entry */
     private final @NonNull Set<String> funcEntryEvents;
@@ -105,20 +109,11 @@ public class LttngUstCallStackProvider extends CallStackStateProvider {
 
     /**
      * Check that this event contains the required information we need to be
-     * used in the call stack view. We need at least the "procname" and "vtid"
-     * contexts.
+     * used in the call stack view.
      */
     @Override
     protected boolean considerEvent(ITmfEvent event) {
-        if (!(event instanceof CtfTmfEvent)) {
-            return false;
-        }
-        ITmfEventField content = ((CtfTmfEvent) event).getContent();
-        if (content.getField(fLayout.contextVtid()) == null ||
-                content.getField(fLayout.contextProcname()) == null) {
-            return false;
-        }
-        return true;
+        return (event instanceof LttngUstEvent);
     }
 
     @Override
@@ -153,8 +148,8 @@ public class LttngUstCallStackProvider extends CallStackStateProvider {
     public String getThreadName(ITmfEvent event) {
         /* Class type and content was already checked if we get called here */
         ITmfEventField content = ((CtfTmfEvent) event).getContent();
-        String procName = (String) content.getField(fLayout.contextProcname()).getValue();
-        Long vtid = (Long) content.getField(fLayout.contextVtid()).getValue();
+        String procName = getProcName(content);
+        Long vtid = getThreadId(event);
 
         if (procName == null || vtid == null) {
             throw new IllegalStateException();
@@ -163,9 +158,15 @@ public class LttngUstCallStackProvider extends CallStackStateProvider {
         return procName + '-' + vtid.toString();
     }
 
+    private String getProcName(ITmfEventField content) {
+        final ITmfEventField field = content.getField(fLayout.contextProcname());
+        return (field == null) ? UNKNOWN : (String) field.getValue();
+    }
+
     @Override
     protected Long getThreadId(ITmfEvent event) {
         ITmfEventField content = ((CtfTmfEvent) event).getContent();
-        return (Long) content.getField(fLayout.contextVtid()).getValue();
+        final ITmfEventField field = content.getField(fLayout.contextVtid());
+        return (field == null) ? Long.valueOf(-1) : (Long) field.getValue();
     }
 }
